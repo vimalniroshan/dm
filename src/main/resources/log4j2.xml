@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="debug" name="DM" packages="">
+	<appenders>
+		<Console name="STDOUT" target="SYSTEM_OUT">
+			<PatternLayout pattern="%X{userName} %d{dd MMM HH:mm:ss:SSS} %p %c{2}.%M - %m%n"/>
+		</Console>
+		<RollingFile name="DM_LOG" fileName="logs/dm.log" filePattern="logs/dm%i.log">
+			<PatternLayout pattern = "%X{userName} %d{dd MMM HH:mm:ss:SSS} %p %c{2}.%M - %m%n" />
+			<Policies>
+				<SizeBasedTriggeringPolicy size="5 MB"/>
+			</Policies>
+			<DefaultRolloverStrategy max="20"/>
+		</RollingFile>
+        <RollingFile name="QUERY_LOG" fileName="logs/query.log" filePattern="logs/query%i.log">
+            <PatternLayout pattern = "%X{userName} %d{dd MMM HH:mm:ss:SSS} %p %c{2}.%M - %m%n" />
+            <Policies>
+                <SizeBasedTriggeringPolicy size="5 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="20"/>
+        </RollingFile>
+	</appenders>
+	<loggers>
+		<logger name="com.sparg.java.dm" level="INFO" additivity="false">
+			<appender-ref ref="DM_LOG"/>
+            <appender-ref ref="STDOUT"/>
+		</logger>
+        <logger name="query.log" level="INFO" additivity="false">
+            <appender-ref ref="QUERY_LOG"/>
+        </logger>
+		<root level="INFO">
+			<appender-ref ref="DM_LOG"/>
+			<appender-ref ref="STDOUT"/>
+		</root>
+	</loggers>
+</configuration>
