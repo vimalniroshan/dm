@@ -1,6 +1,6 @@
 package com.sparg.java.dm.strategy.push;
 
-import com.sparg.java.dm.datasource.DataSource;
+import com.sparg.java.dm.jdbc.DmJdbcTemplate;
 import com.sparg.java.dm.entity.EntityUtils;
 import com.sparg.java.dm.entity.ExecutionHandler;
 import com.sparg.java.dm.model.ETLFlag;
@@ -20,9 +20,9 @@ public abstract class AbstractPushStrategy implements Strategy {
 
     private static final Logger log = LogManager.getLogger(AbstractPushStrategy.class);
 
-    protected DataSource target;
+    protected DmJdbcTemplate target;
 
-    protected AbstractPushStrategy(final DataSource target) {
+    protected AbstractPushStrategy(final DmJdbcTemplate target) {
         this.target = target;
     }
 

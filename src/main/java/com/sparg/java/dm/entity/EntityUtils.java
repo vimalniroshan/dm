@@ -1,7 +1,6 @@
 package com.sparg.java.dm.entity;
 
 import com.sparg.java.dm.annotation.Table;
-import com.sparg.java.dm.datasource.DataSource;
 import com.sparg.java.dm.model.ETLFlag;
 import javassist.util.proxy.ProxyObject;
 
@@ -31,7 +30,7 @@ public class EntityUtils {
             ((EntityProxy)((ProxyObject) row).getHandler()).setEtlFlag(etlFlag);
         } catch (Exception e) {
             throw new IllegalArgumentException(String.format("This row object is not created through %s and cannot be checked for %s",
-                    DataSource.class.getSimpleName(), ETLFlag.class.getSimpleName()), e);
+                    EntityManager.class.getSimpleName(), ETLFlag.class.getSimpleName()), e);
         }
     }
 
@@ -40,7 +39,7 @@ public class EntityUtils {
             return ((EntityProxy)((ProxyObject) row).getHandler()).getEtlFlag();
         } catch (Exception e) {
             throw new IllegalArgumentException(String.format("This row object is not created through %s and cannot be checked for %s",
-                    DataSource.class.getSimpleName(), ETLFlag.class.getSimpleName()), e);
+                    EntityManager.class.getSimpleName(), ETLFlag.class.getSimpleName()), e);
         }
     }
 

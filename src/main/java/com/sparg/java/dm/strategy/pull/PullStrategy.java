@@ -1,7 +1,7 @@
 package com.sparg.java.dm.strategy.pull;
 
 import com.sparg.java.dm.context.MigrationContext;
-import com.sparg.java.dm.datasource.DataSource;
+import com.sparg.java.dm.jdbc.DmJdbcTemplate;
 import com.sparg.java.dm.entity.SourceFieldMapper;
 
 import java.util.Set;
@@ -16,7 +16,7 @@ public class PullStrategy extends AbstractPullStrategy {
     private MigrationContext context;
     private Set<Class<?>> entities;
 
-    public PullStrategy(DataSource source) {
+    public PullStrategy(DmJdbcTemplate source) {
         super(source);
         context = MigrationContext.getInstance();
         entities = MigrationContext.getInstance().getEntities();

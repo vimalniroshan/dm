@@ -1,7 +1,7 @@
 package com.sparg.java.dm.strategy.pull;
 
 import com.sparg.java.dm.context.MigrationContext;
-import com.sparg.java.dm.datasource.DataSource;
+import com.sparg.java.dm.jdbc.DmJdbcTemplate;
 import com.sparg.java.dm.entity.EntityManager;
 import com.sparg.java.dm.entity.EntityManagerFactory;
 import com.sparg.java.dm.entity.ResultSetToObjectMapper;
@@ -21,10 +21,10 @@ public abstract class AbstractPullStrategy implements Strategy {
 
     private static final Logger log = LogManager.getLogger(AbstractPullStrategy.class);
 
-    protected DataSource source;
+    protected DmJdbcTemplate source;
     protected EntityManagerFactory entityManagerFactory;
 
-    protected AbstractPullStrategy(final DataSource source) {
+    protected AbstractPullStrategy(final DmJdbcTemplate source) {
         this.source = source;
         this.entityManagerFactory = MigrationContext.getInstance().getEntityManagerFactory();
     }

@@ -1,15 +1,18 @@
 package com.sparg.java.dm.strategy;
 
 import com.sparg.java.dm.context.MigrationContext;
-import com.sparg.java.dm.datasource.DataSource;
-import com.sparg.java.dm.datasource.DataSourceImpl;
 import com.sparg.java.dm.entity.EntityManagerFactory;
+import com.sparg.java.dm.jdbc.DataSourceHandler;
+import com.sparg.java.dm.jdbc.DmJdbcTemplate;
+import com.sparg.java.dm.jdbc.DmJdbcTemplateImpl;
+import com.sparg.java.dm.jdbc.JDBCUtil;
 import com.sparg.java.dm.strategy.pull.PullStrategy;
 import com.sparg.java.dm.strategy.push.PushStrategy;
 import com.sparg.java.dm.util.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -23,8 +26,8 @@ public class MigrationStrategy extends AbstractMigrationStrategy {
 
     private static final Logger log = LogManager.getLogger(MigrationStrategy.class);
 
-    private DataSource source;
-    private DataSource target;
+    private DmJdbcTemplate source;
+    private DmJdbcTemplate target;
     private PullStrategy pullStrategy;
     private List<Strategy> strategies = new ArrayList<Strategy>();
     private PushStrategy pushStrategy;
@@ -36,13 +39,31 @@ public class MigrationStrategy extends AbstractMigrationStrategy {
     @Override
     protected void init() {
         EntityManagerFactory entityManagerFactory = MigrationContext.getInstance().getEntityManagerFactory();
-        source = new DataSourceImpl(config.getProperty("source.db.username"),
-                 config.getProperty("source.db.password"),
-                 config.getProperty("source.db.url"), entityManagerFactory);
 
-        target = new DataSourceImpl(config.getProperty("target.db.username"),
-                 config.getProperty("target.db.password"),
-                 config.getProperty("target.db.url"), entityManagerFactory);
+        source = new DmJdbcTemplateImpl(new DataSourceHandler() {
+            @Override
+            public Connection getConnection() {
+                return JDBCUtil.getConnection(config.getProperty("source.db.url"), config.getProperty("source.db.username"), config.getProperty("source.db.password"));
+            }
+
+            @Override
+            public void releaseConnection(final Connection connection) {
+                JDBCUtil.closeConnection(connection);
+            }
+        }, entityManagerFactory);
+
+        target = new DmJdbcTemplateImpl(new DataSourceHandler() {
+            @Override
+            public Connection getConnection() {
+                return JDBCUtil.getConnection(config.getProperty("target.db.url"), config.getProperty("target.db.username"), config.getProperty("target.db.password"));
+            }
+
+            @Override
+            public void releaseConnection(final Connection connection) {
+                JDBCUtil.closeConnection(connection);
+            }
+
+        }, entityManagerFactory);
 
         pullStrategy = new PullStrategy(source);
         String[] strategies = config.getProperty("dm.strategies").split(",");
@@ -54,6 +75,7 @@ public class MigrationStrategy extends AbstractMigrationStrategy {
                 throw new RuntimeException(String.format("Unable to load/create instance of strategy class '%s'"), e);
             }
         }
+
         pushStrategy = new PushStrategy(target);
     }
 
@@ -64,15 +86,5 @@ public class MigrationStrategy extends AbstractMigrationStrategy {
             strategy.execute();
         }
         pushStrategy.execute();
-    }
-
-    @Override
-    protected void close() {
-        if(source != null) {
-            source.close();
-        }
-        if(target != null) {
-            target.close();
-        }
     }
 }

@@ -1,7 +1,7 @@
 package com.sparg.java.dm.strategy.push;
 
 import com.sparg.java.dm.context.MigrationContext;
-import com.sparg.java.dm.datasource.DataSource;
+import com.sparg.java.dm.jdbc.DmJdbcTemplate;
 import com.sparg.java.dm.strategy.Strategy;
 
 import java.util.Set;
@@ -16,7 +16,7 @@ public class PushStrategy extends  AbstractPushStrategy implements Strategy {
     private MigrationContext context;
     private Set<Class<?>> entities;
 
-    public PushStrategy(DataSource target) {
+    public PushStrategy(DmJdbcTemplate target) {
         super(target);
         context = MigrationContext.getInstance();
         entities = MigrationContext.getInstance().getEntities();
