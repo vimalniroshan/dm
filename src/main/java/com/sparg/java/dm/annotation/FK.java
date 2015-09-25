@@ -13,9 +13,13 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  */
 
 @Documented
-@Retention(value= RUNTIME)
-@java.lang.annotation.Target(value={FIELD})
+@Retention(value = RUNTIME)
+@java.lang.annotation.Target(value = {FIELD})
 public @interface FK {
-    Class reference();     //FK referring class (Java Class)
-    String field();        //FK field in the java class
+    Class reference() default Object.class;     //FK referring class (Java Class)
+
+    String field() default "";        //FK field in the java class
+
+    String targetQuery() default "";
+
 }

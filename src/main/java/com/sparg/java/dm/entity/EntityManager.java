@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -12,7 +13,7 @@ import java.util.Set;
  * Time: 3:14 PM
  */
 public interface EntityManager<T> {
-    public T getNewInstance() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException;
+    public T getNewEntityInstance() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException;
 
     public String getTableName();
 
@@ -25,6 +26,8 @@ public interface EntityManager<T> {
     public List<? extends Field> getBkFields();
 
     public List<? extends Field> getFkFields();
+
+    public Map<Field, String> getFkFieldsWithTargetQuery();
 
     public List<? extends Field> getSourceFields();
 
